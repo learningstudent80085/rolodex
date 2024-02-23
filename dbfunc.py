@@ -1,19 +1,5 @@
 import sqlite3
 
-conn = sqlite3.connect("sample_db.db")
-
-cursor = conn.cursor()
-
-#cursor.execute("INSERT INTO contacts VALUES ('john','doe','123456789','john@doe.com');")
-#conn.commit()
-cursor.execute("SELECT rowid,* FROM contacts")
-conn.commit()
-
-data = cursor.fetchall()
-for entry in data:
-    print(entry)
-conn.close()
-
 def add_entry():
     first = input("Enter first name \n")
     last = input("Enter last name \n")
@@ -26,9 +12,15 @@ def add_entry():
     conn.close()
 
 def search_entry():
-    
+    first = input("Enter first name")
+    last = input("Enter last name")
     conn = sqlite3.connect("sample_db.db")
     cursor = conn.cursor()
+    cursor.execute("SELECT rowid,* FROM contacts WHERE first LIKE $?$ OR last LIKE $?$",(first,last))
+    conn.commit()
+    data = cursor.fetchall()
+    for entry in data:
+        print(entry)
     conn.close()
 
 def update_entry():
@@ -51,5 +43,3 @@ def delete_entry():
     conn.commit()
     conn.close()
     print("entry deleted")
-
-#delete_entry()
